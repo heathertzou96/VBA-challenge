@@ -1,0 +1,234 @@
+/////// FAULTY//////
+//// HAVE TO SET DIM WS AND FOR EACH WS IN ACTIVE WORKBOOK YOU HAVE TO ACTIVATE WS /////
+
+Sub alphabetical_testing():
+    
+    'defining the summary table headers
+    Range("I1") = "Ticker"
+    Range("J1") = "Yearly Change"
+    Range("K1") = "Percent Change"
+    Range("L1") = "Total Stock Volume"
+    
+    Dim ticker As String
+    Dim closePrice As Double
+    Dim openPrice As Double
+    openPrice = Cells(2, 3).Value
+    
+    Dim yearlyChange As Double
+    Dim percentChange As Double
+    Dim stockVolume As Double
+    stockVolume = 0
+
+    Dim summaryTableRow As Integer
+    summaryTableRow = 2
+    
+    For Each ws In Worksheets
+        
+        ws.Activate
+
+        lastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+        
+        For i = 2 To lastRow
+            
+            If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+                
+                ticker = Cells(i, 1).Value
+                Range("I" & summaryTableRow) = ticker
+        
+                closePrice = Cells(i, 6).Value
+                yearlyChange = closePrice - openPrice
+                Range("J" & summaryTableRow) = yearlyChange
+                
+                If openPrice <> 0 Then
+                    percentChange = yearlyChange / openPrice
+                    Range("K" & summaryTableRow) = percentChange
+                    Range("K" & summaryTableRow).Style = "Percent"
+                Else
+                End If
+                
+                stockVolume = stockVolume + Cells(i, 7)
+                Range("L" & summaryTableRow) = stockVolume
+                
+                
+                openPrice = Cells(i + 1, 3).Value
+                stockVolume = 0
+                summaryTableRow = summaryTableRow + 1
+                
+            End If
+            
+            stockVolume = stockVolume + Cells(i, 7)
+
+        Next i
+        
+        yearlyChangeLastRow = ws.Cells(Rows.Count, 10).End(xlUp).Row
+        
+        For j = 2 To yearlyChangeLastRow
+            
+            If Cells(j, 10).Value > 0 Or Cells(j, 10).Value = 0 Then
+                
+                Cells(j, 10).Interior.ColorIndex = 4
+            
+            Else
+                
+                Cells(j, 10).Interior.ColorIndex = 3
+            
+            End If
+        
+        Next j
+        
+        Range("O2").Value = "Greatest % Increase"
+        Range("O3").Value = "Greatest % Decrease"
+        Range("O4").Value = "Greatest Total Volume"
+        Range("P1").Value = "Ticker"
+        Range("Q1").Value = "Value"
+        
+        percentChangeLastRow = ws.Cells(Rows.Count, 11).End(xlUp).Row
+        
+        For k = 2 To percentChangeLastRow
+            
+            If Cells(k, 11).Value = WorksheetFunction.Max(ws.Range("K2:K" & percentChangeLastRow)) Then
+                Range("P2").Value = Cells(k, 9).Value
+                Range("Q2").Value = Cells(k, 11).Value
+                Range("Q2").Style = "Percent"
+                
+            ElseIf Cells(k, 11).Value = WorksheetFunction.Min(ws.Range("K2:K" & percentChangeLastRow)) Then
+                Range("P3").Value = Cells(k, 9).Value
+                Range("Q3").Value = Cells(k, 11).Value
+                Range("Q3").Style = "Percent"
+            End If
+                
+        Next k
+        
+        totalStockLastRow = ws.Cells(Rows.Count, 12).End(xlUp).Row
+        
+        For Z = 2 To totalStockLastRow
+        
+            If Cells(Z, 12).Value = WorksheetFunction.Max(ws.Range("L2:L" & totalStockLastRow)) Then
+                Range("P4").Value = Cells(Z, 9).Value
+                Range("Q4").Value = Cells(Z, 12).Value
+            End If
+        
+        Next Z
+        
+    Next ws
+    
+End Sub
+
+//////////////////////////////////////////////////////////////////////////////////////////
+///USE THIS////
+
+Sub alphabetical_testing():
+
+    Dim ws As Worksheet
+    
+    For Each ws In ActiveWorkbook.Worksheets
+        
+        ws.Activate
+
+        Range("I1") = "Ticker"
+        Range("J1") = "Yearly Change"
+        Range("K1") = "Percent Change"
+        Range("L1") = "Total Stock Volume"
+        
+        Dim ticker As String
+        Dim closePrice As Double
+        Dim openPrice As Double
+        openPrice = Cells(2, 3).Value
+        
+        Dim yearlyChange As Double
+        Dim percentChange As Double
+        Dim stockVolume As Double
+        stockVolume = 0
+
+        Dim summaryTableRow As Integer
+        summaryTableRow = 2
+
+        lastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+        
+        For i = 2 To lastRow
+            
+            If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+                
+                ticker = Cells(i, 1).Value
+                Range("I" & summaryTableRow) = ticker
+        
+                closePrice = Cells(i, 6).Value
+                yearlyChange = closePrice - openPrice
+                Range("J" & summaryTableRow) = yearlyChange
+                
+                If openPrice <> 0 Then
+                    percentChange = yearlyChange / openPrice
+                    Range("K" & summaryTableRow) = percentChange
+                    Range("K" & summaryTableRow).Style = "Percent"
+                Else
+                End If
+                
+                stockVolume = stockVolume + Cells(i, 7)
+                Range("L" & summaryTableRow) = stockVolume
+                
+                
+                openPrice = Cells(i + 1, 3).Value
+                stockVolume = 0
+                summaryTableRow = summaryTableRow + 1
+                
+            Else
+            
+            stockVolume = stockVolume + Cells(i, 7).Value
+
+            End If 
+
+        Next i
+        
+        yearlyChangeLastRow = ws.Cells(Rows.Count, 10).End(xlUp).Row
+        
+        For j = 2 To yearlyChangeLastRow
+            
+            If Cells(j, 10).Value > 0 Or Cells(j, 10).Value = 0 Then
+                
+                Cells(j, 10).Interior.ColorIndex = 4
+            
+            Else
+                
+                Cells(j, 10).Interior.ColorIndex = 3
+            
+            End If
+        
+        Next j
+        
+        Range("O2").Value = "Greatest % Increase"
+        Range("O3").Value = "Greatest % Decrease"
+        Range("O4").Value = "Greatest Total Volume"
+        Range("P1").Value = "Ticker"
+        Range("Q1").Value = "Value"
+        
+        percentChangeLastRow = ws.Cells(Rows.Count, 11).End(xlUp).Row
+        
+        For k = 2 To percentChangeLastRow
+            
+            If Cells(k, 11).Value = WorksheetFunction.Max(ws.Range("K2:K" & percentChangeLastRow)) Then
+                Range("P2").Value = Cells(k, 9).Value
+                Range("Q2").Value = Cells(k, 11).Value
+                Range("Q2").Style = "Percent"
+                
+            ElseIf Cells(k, 11).Value = WorksheetFunction.Min(ws.Range("K2:K" & percentChangeLastRow)) Then
+                Range("P3").Value = Cells(k, 9).Value
+                Range("Q3").Value = Cells(k, 11).Value
+                Range("Q3").Style = "Percent"
+            End If
+                
+        Next k
+        
+        totalStockLastRow = ws.Cells(Rows.Count, 12).End(xlUp).Row
+        
+        For Z = 2 To totalStockLastRow
+        
+            If Cells(Z, 12).Value = WorksheetFunction.Max(ws.Range("L2:L" & totalStockLastRow)) Then
+                Range("P4").Value = Cells(Z, 9).Value
+                Range("Q4").Value = Cells(Z, 12).Value
+            End If
+        
+        Next Z
+        
+    Next ws
+    
+End Sub
