@@ -13,5 +13,5 @@ The purpose of this project is to use VBA scripting to analyze real stock market
   * The percent change from opening price at the beginning of a given year to the closing price at the end of that year.
   * The total stock volume of the stock.
   * The sock with the "Greatest % increase", "Greatest % decrease" and "Greatest total volume."
-  ! [example] (Images/pic_1.png)
+  ![example](Images/pic_1.png)
     
